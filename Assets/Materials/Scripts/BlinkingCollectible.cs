@@ -28,7 +28,7 @@ public class BlinkingCollectible : MonoBehaviour
         throw new NotImplementedException();
     }
 
-    private IEnumerable Blink()
+    IEnumerable Blink()
     {
         for (int i = 0; i < blinkCount; i++)
         {
