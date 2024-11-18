@@ -1,35 +1,32 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraRotation : MonoBehaviour
 {
-    public float sensitivity = 100f;
-    public Transform playerBody;
+    public float mouseSensitivity = 100f; // Sensitivity of the mouse
+    public Transform playerBody;         // Reference to the player's body
 
-    private float xRotation = 0f;
+    private float xRotation = 0f;        // Current vertical rotation of the camera
 
-     void Start()
+    void Start()
     {
-
+        // Lock the cursor to the game window and make it invisible
         Cursor.lockState = CursorLockMode.Locked;
-
     }
 
-     void Update()
+    void Update()
     {
-        RotateCamera();
-    }
+        // Get mouse input
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-    void RotateCamera()
-    {
-        float mouseX = Input.GetAxis("Mouse X") * sensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * sensitivity * Time.deltaTime;
+        // Rotate the camera vertically (up and down)
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f); // Clamp vertical rotation to avoid flipping
 
-        xRotation -= mouseY;                  // Vertical rotation
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);  // Limit vertical rotation to 90 degrees up and down
+        // Apply the vertical rotation
+        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
 
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);  // Rotate camera around the X axis
-        playerBody.Rotate(Vector3.up * mouseX);  // Rotate player body around the Y axis for horizontal movement
+        // Rotate the player horizontally (left and right)
+        playerBody.Rotate(Vector3.up * mouseX);
     }
 }
