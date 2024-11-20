@@ -23,10 +23,18 @@ public class CameraRotation : MonoBehaviour
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f); // Clamp vertical rotation to avoid flipping
 
-        // Apply the vertical rotation
+        // Apply the vertical rotation to the camera
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
 
         // Rotate the player horizontally (left and right)
-        playerBody.Rotate(Vector3.up * mouseX);
+        if (playerBody != null)
+        {
+            playerBody.Rotate(Vector3.up * mouseX);
+        }
+        else
+        {
+            Debug.LogWarning("PlayerBody is not assigned!");
+        }
     }
 }
+
