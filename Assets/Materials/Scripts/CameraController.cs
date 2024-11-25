@@ -4,18 +4,50 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    public GameObject player;
-    private Vector3 offset;
+    public GameObject player; // The player to follow
+    public float sensitivity = 3.0f; // How fast the camera moves with the mouse
+    public float distance = 5.0f; // How far the camera stays from the player
 
-    // Start is called before the first frame update
-    void Start()
+    private float rotationX = 0f; // Horizontal rotation
+    private float rotationY = 0f; // Vertical rotation
+
+    private void Start()
     {
-        offset = transform.position - player.transform.position; 
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
-    // Update is called once per frame
-    void LateUpdate()
+    void Update()
     {
-        transform.position = player.transform.position + offset;
+
+        if (Input.GetMouseButton(2))
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+
+
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+
+        // Get mouse movement
+        float mouseX = Input.GetAxis("Mouse X") * sensitivity;
+        float mouseY = Input.GetAxis("Mouse Y") * sensitivity;
+
+        // Adjust rotations based on mouse input
+        rotationX += mouseX;
+        rotationY -= mouseY;
+        rotationY = Mathf.Clamp(rotationY, -45f, 45f); // Limit vertical rotation
+
+        // Calculate the new camera position
+        Vector3 direction = new Vector3(0, 0, -distance); // Move the camera backward by "distance"
+        Quaternion rotation = Quaternion.Euler(rotationY, rotationX, 0); // Apply rotation
+        transform.position = player.transform.position + rotation * direction;
+
+        // Make the camera look at the player
+        transform.LookAt(player.transform.position);
     }
 }
